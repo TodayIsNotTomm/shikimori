@@ -11,7 +11,6 @@ class VotesController < ShikimoriController
 
   def create
     if(VOTABLE_TYPES.include?(params[:votable_type]))
-      puts('Success')
       Votable::Vote.call(
         votable: params[:votable_type].constantize.find(
           params[:votable_id]
