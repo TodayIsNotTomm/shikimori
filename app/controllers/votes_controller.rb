@@ -6,7 +6,9 @@ class VotesController < ShikimoriController
     Review
     Collection
     Poll
+    PollVariant
     ContestMatch
+    CosplayGallery
   ]
 
   def create
