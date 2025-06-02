@@ -95,7 +95,6 @@ class Topic < ApplicationRecord # rubocop:disable ClassLength
   }
 
   before_save :validate_linked
-  before_update :validate_linked
   before_save :check_spam_abuse, if: :will_save_change_to_body?
   before_save :fill_created_at, if: :will_save_change_to_comments_count?
 
