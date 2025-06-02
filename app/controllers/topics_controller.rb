@@ -98,35 +98,43 @@ class TopicsController < ShikimoriController # rubocop:disable Metris/ClassLengt
   end
 
   def create
-    @resource = Topic::Create.call(
-      faye:,
-      params: topic_params
-    )
-
-    if @resource.persisted?
-      redirect_to(
-        UrlGenerator.instance.topic_url(@resource),
-        notice: i18n_t('topic.created')
+    if(valid_linked)
+      @resource = Topic::Create.call(
+        faye:,
+        params: topic_params
       )
+
+      if @resource.persisted?
+        redirect_to(
+          UrlGenerator.instance.topic_url(@resource),
+          notice: i18n_t('topic.created')
+        )
+      else
+        new
+        flash[:alert] = t('changes_not_saved')
+        render :new
+      end
     else
-      new
-      flash[:alert] = t('changes_not_saved')
-      render :new
+      render json: { error: 'Incompatible linked_type supplied' }, status: 422
     end
   end
 
   def update
-    is_updated = Topic::Update.call @resource, topic_params, faye
+    if(valid_linked)
+      is_updated = Topic::Update.call @resource, topic_params, faye
 
-    if is_updated
-      redirect_to(
-        UrlGenerator.instance.topic_url(@resource),
-        notice: i18n_t('topic.updated')
-      )
+      if is_updated
+        redirect_to(
+          UrlGenerator.instance.topic_url(@resource),
+          notice: i18n_t('topic.updated')
+        )
+      else
+        edit
+        flash[:alert] = t('changes_not_saved')
+        render :edit
+      end
     else
-      edit
-      flash[:alert] = t('changes_not_saved')
-      render :edit
+      render json: { error: 'Incompatible linked_type supplied' }, status: 422
     end
   end
 
@@ -245,6 +253,14 @@ private
 
   def faye
     FayeService.new current_user, faye_token
+  end
+
+  def valid_linked
+    linked_type = params[:topic][:linked_type]
+    puts "linked_type"
+    puts linked_type
+    puts linked_type.blank? || Topic::LINKED_TYPES.include?(linked_type)
+    linked_type.blank? || Topic::LINKED_TYPES.include?(linked_type)
   end
 
   def noindex?
