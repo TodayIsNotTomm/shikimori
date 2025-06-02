@@ -67,6 +67,7 @@ class Topic < ApplicationRecord # rubocop:disable ClassLength
 
   validates :forum, :user, presence: true
   validates :title, :body, presence: true, unless: :generated?
+  validates :linked, presence: true, if: -> { linked_id.present? }
 
   boolean_attribute :censored
 
