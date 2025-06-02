@@ -132,7 +132,7 @@ class Topic < ApplicationRecord # rubocop:disable ClassLength
 private
 
   def validate_linked
-    return if TopicsHelper.valid_linked linked_type, linked_id
+    return if linked_type.blank? || LINKED_TYPES.include?(linked_type)
 
     errors.add :linked_type, 'Forbidden Linked Type'
     throw :abort
