@@ -257,9 +257,6 @@ private
 
   def valid_linked
     linked_type = params[:topic][:linked_type]
-    puts "linked_type"
-    puts linked_type
-    puts linked_type.blank? || Topic::LINKED_TYPES.include?(linked_type)
     linked_type.blank? || Topic::LINKED_TYPES.include?(linked_type)
   end
 
