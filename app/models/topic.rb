@@ -134,7 +134,7 @@ private
   def validate_linked
     return if TopicsHelper.valid_linked linked_type, linked_id
 
-    errors.add :linked_type, 'Forbidden Linked Type or ID'
+    errors.add :linked_type, 'Forbidden Linked Type'
     throw :abort
   end
 
