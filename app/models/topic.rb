@@ -45,8 +45,6 @@ class Topic < ApplicationRecord # rubocop:disable ClassLength
     socials: 270_099
   }
 
-  # спросите у мора, возможно удалённые типы всё таки зачем-то нужны
-  # в этом случае надо идти дальше по коду и чекать на nil
   LINKED_TYPES = %w[
     Anime
     Manga
@@ -96,6 +94,7 @@ class Topic < ApplicationRecord # rubocop:disable ClassLength
   }
 
   before_save :validate_linked
+  before_update :validate_linked
   before_save :check_spam_abuse, if: :will_save_change_to_body?
   before_save :fill_created_at, if: :will_save_change_to_comments_count?
 
@@ -132,9 +131,9 @@ class Topic < ApplicationRecord # rubocop:disable ClassLength
 private
 
   def validate_linked
-    return if linked_type.blank? || LINKED_TYPES.include?(linked_type)
+    return if TopicsHelper.valid_linked linked_type, linked_id
 
-    errors.add :linked_type, 'Forbidden Linked Type'
+    errors.add :linked_type, 'Forbidden Linked Type or ID'
     throw :abort
   end
 
