@@ -53,6 +53,14 @@ class Topic < ApplicationRecord # rubocop:disable ClassLength
     Ranobe
     Character
     Person
+    Club
+    ClubPage
+    Critique
+    Review
+    Contest
+    CosplayGallery
+    Collection
+    Article
   ]
 
   belongs_to :forum
