@@ -4,12 +4,16 @@ class Topic::Create
   method_object %i[params! faye!]
 
   def call
-    topic = build_topic
+    if(TopicsHelper.valid_linked params[:linked_type], params[:linked_id])
+      topic = build_topic
 
-    assign_forum topic if news? topic
-    broadcast topic if @faye.create(topic) && broadcast?(topic)
+      assign_forum topic if news? topic
+      broadcast topic if @faye.create(topic) && broadcast?(topic)
 
-    topic
+      topic
+    else
+      nil
+    end
   end
 
 private
